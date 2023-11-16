@@ -1,9 +1,8 @@
 <!DOCTYPE html>
 <html>
-
   <head>
-        
-
+    <title>PRPDF</title>
+    <description>Web Based PDF Processor</description>
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css">
     <!-- Google Fonts -->
@@ -26,23 +25,22 @@
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.19.0/js/mdb.min.js"></script>
     
 
-    <!-- LoadingOverlay und ACE Editpor-->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.11/ace.js" type="text/javascript" charset="utf-8"></script>
-    <script src="https://cdn.jsdelivr.net/npm/gasparesganga-jquery-loading-overlay@2.1.7/dist/loadingoverlay.min.js"></script>
-
-
+    <!-- LoadingOverlay und ACE Editport-->
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.11/ace.js" type="text/javascript" charset="utf-8"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/gasparesganga-jquery-loading-overlay@2.1.7/dist/loadingoverlay.min.js"></script>
+    <script defer>  
+      $("#button_autoscan").onclick=function(){
+              $("#load").LoadingOverlay("show")
+      };
+    </script>
     <style>
-body {
-  overflow: hidden; /* Hide scrollbars */
-}
-</style>
+      body {
+        overflow: hidden; /* Hide scrollbars */
+      }
+    </style>
+  </head>
 
-        </head>
-
-    <body id="load">
-
-
-        
+    <body id="load">      
       <header>
             <!-- Navbar -->
            <!--<nav class="navbar navbar-expand-lg navbar-light bg-light"> -->
@@ -114,16 +112,5 @@ body {
     {% block content %}{% endblock %}
     
 
-<script>  
-
-        var autoscan_cl=document.getElementById("button_autoscan");
-        autoscan_cl.onclick=function(){
-                
-                $("#load").LoadingOverlay("show")
-        
-        };
-        
-
-</script>
 
 </html>
