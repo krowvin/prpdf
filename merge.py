@@ -16,31 +16,33 @@ from vars import UNKN_DIR
 # Front back in individual PDFS
 # Automatic Document Feeder
 def pdf_adf(frontpdfraw, backpdfraw, out_filename):
+    try:
+        f_pdf_file = open(frontpdfraw, "rb")
+        frontpdf = PdfFileReader(f_pdf_file)
+        b_pdf_file = open(backpdfraw, "rb")
+        backpdf = PdfFileReader(b_pdf_file)
 
-    frontpdf = PdfFileReader(open(frontpdfraw, "rb"))
-    backpdf = PdfFileReader(open(backpdfraw, "rb"))
+        if frontpdf.numPages==backpdf.numPages:
 
-    if frontpdf.numPages==backpdf.numPages:
+            output = PdfFileWriter()
+            for i in range(int(frontpdf.numPages)):
+                #print(i)
+                output.addPage(frontpdf.getPage(i))
+                output.addPage(backpdf.getPage(backpdf.numPages-i-1))
+                #print(backpdf.numPages-i-1)
+            with open(UNKN_DIR+out_filename+".pdf", "wb") as outputStream:
+                output.write(outputStream)
 
-        output = PdfFileWriter()
-        for i in range(int(frontpdf.numPages)):
-            #print(i)
-            output.addPage(frontpdf.getPage(i))
-            output.addPage(backpdf.getPage(backpdf.numPages-i-1))
-            #print(backpdf.numPages-i-1)
-        with open(UNKN_DIR+out_filename+".pdf", "wb") as outputStream:
-            output.write(outputStream)
+            return "merged"
 
-        return "merged"
-
-    else:
-        return "page amount front/back differs"
-
-
+        else:
+            return "page amount front/back differs"
+    finally:
+        f_pdf_file.close()
+        b_pdf_file.close()
 
 # Alle PDFs aus Verzeichnis in eine PDF
 def pdf_merge_all(allpdfs,out_filename):
-
     #allpdfs = [a for a in glob(in_dir+"*.pdf")]     # Liste Files aus in_dir
     pdf_anz=int(len(allpdfs))                       # Anzahl Files
     if pdf_anz >1:

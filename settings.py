@@ -10,39 +10,45 @@ settings - Helpers
 import json
 import os
 from vars import WORK_DIR
-configsrc = os.path.join(WORK_DIR, '/config/config.json')
-
+CONFIG_FILE = os.path.join(WORK_DIR, 'config\config.json')
+DEFAULT_CONFIG = """{
+    "port":80,
+    "debug":"off",
+    "lang":"eng",
+    "updatetime":1800,
+    "index":{
+        "Foldername/Filename":["Keyword1"],
+        "Foldername2/Filename":["Keyword1","Keyword2 ","Keyword3"]
+    }
+}"""
 # or '/data/prpdf/config/config.json'
 
-def getConfigRaw():
-	config_raw= open(configsrc, 'r')
-	return config_raw
+def readConfig():
+	with open(CONFIG_FILE, 'r') as cf:
+		return cf.read()
 
 def loadConfig():
     #print("loadConfig()")
-    res={}
+    try:
+        if not os.path.exists(CONFIG_FILE):
+            writeConfig(DEFAULT_CONFIG)
+        with open(CONFIG_FILE, 'r') as fp:
+            return json.load(fp)
+    except FileNotFoundError:
+        print(f"File Not Found {CONFIG_FILE}")
+        return {}
 
-    if not os.path.exists(configsrc):
-        writeConfig(""" {
-        "port":80,
-        "debug":"off",
-        "lang":"eng",
-        "updatetime":1800,
-        "index":{
-            "Foldername/Filename":["Keyword1"],
-            "Foldername2/Filename":["Keyword1","Keyword2 ","Keyword3"]
-        }
-        }""")
+def writeJsonConfig(config_data):
+    writeConfig()
 
-    with open(configsrc, 'r') as fp:
-        res = json.load(fp)
-    return res
-   
-def writeJsonConfig(config):
-    jc=json.dumps(config)
-    writeConfig(jc)
+def writeConfig(config_data, config=CONFIG_FILE):
+    '''
+        Writes a dictionary or string object to a config file
 
-def writeConfig(config):
-	f = open(configsrc, "w")
-	f.write(config)
-	f.close()
+        Takes optional config file path
+    '''
+    with open(config, "w") as cfg_file:
+        if isinstance(config_data, dict):
+            json.dump(config_data, cfg_file)
+        else:
+            cfg_file.write(config_data)

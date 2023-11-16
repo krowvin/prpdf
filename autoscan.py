@@ -19,10 +19,11 @@ import settings
 from vars import WORK_DIR, PDF_DIR, TEMP_DIR, ARCH_DIR, UNKN_DIR
 
 
+print(WORK_DIR)
 os.chdir(WORK_DIR)
 # Logging
 logging.basicConfig(filename=os.path.join(
-    WORK_DIR, '/config/server.log'), level=logging.INFO)
+    WORK_DIR, 'config/server.log'), level=logging.INFO)
 
 # Filedate
 # filedatum=datetime.now().strftime('%d_%m_%Y+0') # filename + Tag_Monat_Jahr_Counter
