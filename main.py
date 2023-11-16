@@ -24,6 +24,10 @@ from vars import ARCH_DIR, UNKN_DIR
 
 app = Flask(__name__)
 
+# Cache
+subdirs = [ARCH_DIR]
+subdirhtml = ""
+
 
 @app.route('/')
 def index():
@@ -107,7 +111,7 @@ def doautoscan():
         autoscan.run()
         global subdirhtml
         subdirhtml = ""
-        listdirs(ARCH_DIR)
+        listDirs(ARCH_DIR)
     except Exception as e:
         print("An exception occurred "+str(e))
         logging.error("An exception occurred "+str(e))
@@ -153,7 +157,7 @@ def autoscan_rule():
 
     config = settings.loadConfig()
     config["index"].update({key: keyw_array})
-    settings.writeJsonConfig(config)
+    settings.writeConfig(config)
 
     pdf = loadFiles()
     return render_template('explorer.html', liste=pdf, subdirhtml=subdirhtml, folders=loadArchivFolder(), iterator=0, message="autoscan rule saved")
@@ -161,8 +165,7 @@ def autoscan_rule():
 
 @app.route('/settings')
 def setting():
-    config_raw = settings.getConfigRaw()
-    return render_template('settings.html', config=settings.loadConfig(), config_raw=config_raw.read())
+    return render_template('settings.html', config=settings.loadConfig(), config_raw=settings.readConfig())
 
 
 @app.route('/settings', methods=['POST'])
@@ -170,11 +173,8 @@ def setting_save():
     config_raw = request.form['hiddenconfig']
     global config
     logging.info("Config: "+config_raw)
-
     if not config_raw:
-        config_raw = settings.getConfigRaw()
-        return render_template('settings.html', config=config, config_raw=config_raw.read())
-
+        return render_template('settings.html', config=config, config_raw=settings.readConfig())
     try:
         json.loads(config_raw)
         settings.writeConfig(config_raw)
@@ -184,27 +184,23 @@ def setting_save():
         logging.error(e)
         return render_template('settings.html', config=config, config_raw=config_raw, message="JSON error")
 
-
-subdirs = [ARCH_DIR]
-subdirhtml = ""
-
-
-def listdirs(rootdir):
+def listDirs(rootdir):
     for it in os.scandir(rootdir):
         if it.is_dir():
             subdirs.append(it.path)
             global subdirhtml
+            # TODO: Remove the HTML from this and put it ont he frontend, create json payloads to push/pull data with instead of raw strings
             subdirhtml += f"""
             <li><i class="fas fa-angle-right rotate"></i>\n
             <span><i class="far fa-folder-open ic-w mx-1"></i><a href="javascript:void(0)" onClick="selectfolder('{it.path}');">{it.name}</a></span>\n
             <ul class="nested">
             """
-            listdirs(it)
+            listDirs(it)
             subdirhtml += """</ul>\n</li>"""
 
 
 print('Creating Directory Map... that can take some time')
-listdirs(ARCH_DIR)
+listDirs(ARCH_DIR)
 
 # print (subdirs)
 
