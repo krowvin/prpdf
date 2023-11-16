@@ -8,7 +8,10 @@ Split Pages File
 
 """ 
 
+import logging
 from PyPDF2 import PdfFileWriter, PdfFileReader
+from locales import translate
+logger = logging.getLogger(__name__)
 
 #Rotate a document 180 clockwise
 def rotate_pages(filename):
@@ -28,6 +31,7 @@ def rotate_pages(filename):
         pdf_out.close()
         pdf_in.close()
     except:
+        logger.error("Failed to rotate PDF", exc_info=True)
         print("Error: rotation failed")
 
 #split a document after pagenumber
@@ -54,4 +58,5 @@ def split_pdf(filename,seite):
             pdf_writer2.write(file2)
 
     except AssertionError as e:
-        print("Error: Seite groesser Anzahl Seiten")
+        logger.error(translate("TOO_MANY_PAGE"), exc_info=True)
+        print(translate("TOO_MANY_PAGE"))

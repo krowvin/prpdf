@@ -20,7 +20,10 @@ import autoscan
 import merge
 import splitpages
 import glob
+from locales import translate
 from vars import ARCH_DIR, UNKN_DIR
+
+print(translate("TOO_MANY_PAGE"))
 
 app = Flask(__name__)
 
@@ -114,7 +117,7 @@ def doautoscan():
         listDirs(ARCH_DIR)
     except Exception as e:
         print("An exception occurred "+str(e))
-        logging.error("An exception occurred "+str(e))
+        logging.error("An exception occurred "+str(e), exc_info=True)
 
     pdf = loadFiles()
     if pdf:
@@ -181,7 +184,7 @@ def setting_save():
         config = settings.loadConfig()
         return render_template('settings.html', config=config, config_raw=config_raw, message="config saved")
     except Exception as e:
-        logging.error(e)
+        logging.error(e, exc_info=True)
         return render_template('settings.html', config=config, config_raw=config_raw, message="JSON error")
 
 def listDirs(rootdir):
