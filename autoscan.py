@@ -22,9 +22,7 @@ from vars import WORK_DIR, PDF_DIR, TEMP_DIR, ARCH_DIR, UNKN_DIR
 print(WORK_DIR)
 os.chdir(WORK_DIR)
 # Logging
-logging.basicConfig(filename=os.path.join(
-    WORK_DIR, 'config/server.log'), level=logging.INFO)
-
+logger = logging.getLogger(__name__)
 # Filedate
 # filedatum=datetime.now().strftime('%d_%m_%Y+0') # filename + Tag_Monat_Jahr_Counter
 
@@ -56,7 +54,7 @@ def autoscan_cron():
             run()
         except Exception as e:
             print("An exception occurred "+str(e))
-            logging.error("An exception occurred "+str(e))
+            logging.error("An exception occurred "+str(e), exc_info=True)
         time.sleep(updatetime)  # TODO conf updatetime
 
 # aus OCR text indexieren und PDFs in Ordner schieben
@@ -99,7 +97,7 @@ def run():
             # PDFs der Reihe nach indexieren
             sort(pdf_file, ocr(PDF_DIR, pdf_file))
         except Exception as e:
-            logging.error("An exception occurred "+str(e))
+            logging.error("An exception occurred "+str(e), stack_info=True)
             print("An exception occurred "+str(e))
             continue
 
@@ -128,7 +126,7 @@ def ocr(folder, pdf_file):
             pages = convert_from_path(
                 source, dpi=400, first_page=1, last_page=1, grayscale=True)
         except Exception as e:
-            logging.error("An exception occurred "+str(e))
+            logging.error("An exception occurred "+str(e), exc_info=True)
             print("An exception occurred "+str(e))
             return ""
 
