@@ -6,7 +6,7 @@ After=network.target
 Environment="WORKDIR=/opt/prpdf"
 WorkingDirectory=/opt/prpdf
 Type=simple
-ExecStart=/usr/bin/python ./prpdf.py
+ExecStart=/usr/bin/python ./main.py
 User=prpdf
 Restart=on-failure
 

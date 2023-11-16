@@ -9,8 +9,8 @@ settings - Helpers
 
 import json
 import os
-
-configsrc = os.environ["WORKDIR"]+'/config/config.json'
+from vars import WORK_DIR
+configsrc = os.path.join(WORK_DIR, '/config/config.json')
 
 # or '/data/prpdf/config/config.json'
 

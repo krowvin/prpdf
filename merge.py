@@ -8,13 +8,13 @@ Merge Pages File
 
 """ 
 
-from PyPDF2 import PdfFileMerger,PdfFileReader,PdfFileWriter
-import os
-from vars import *
+from PyPDF2 import PdfFileMerger, PdfFileReader, PdfFileWriter
+from vars import UNKN_DIR
 
 #------------------------------------------------
 # Vorder Rueckseite in einzelne PDFs
-# Automatic Document Feader
+# Front back in individual PDFS
+# Automatic Document Feeder
 def pdf_adf(frontpdfraw, backpdfraw, out_filename):
 
     frontpdf = PdfFileReader(open(frontpdfraw, "rb"))
@@ -28,7 +28,7 @@ def pdf_adf(frontpdfraw, backpdfraw, out_filename):
             output.addPage(frontpdf.getPage(i))
             output.addPage(backpdf.getPage(backpdf.numPages-i-1))
             #print(backpdf.numPages-i-1)
-        with open(unknown_dir+out_filename+".pdf", "wb") as outputStream:
+        with open(UNKN_DIR+out_filename+".pdf", "wb") as outputStream:
             output.write(outputStream)
 
         return "merged"
@@ -48,7 +48,7 @@ def pdf_merge_all(allpdfs,out_filename):
         for i in range(int(pdf_anz)):
             merger.append(allpdfs[i])               # alle Seiten plus
 
-        with open(unknown_dir+out_filename+".pdf", "wb") as new_file:
+        with open(UNKN_DIR+out_filename+".pdf", "wb") as new_file:
             merger.write(new_file)              # alle Seiten in neues File
     else:
         print("Fehler!!! PDF Dir nicht vorhanden")
@@ -60,7 +60,7 @@ def pdf_merge_file(file1,file2,out_filename):
     merger = PdfFileMerger() 
     for files in pdf_files:
         merger.append(files) 
-    with open(unknown_dir+out_filename+".pdf", "wb") as new_file:
+    with open(UNKN_DIR+out_filename+".pdf", "wb") as new_file:
         merger.write(new_file)              # alle Seiten in neues File
     return "merged"
 

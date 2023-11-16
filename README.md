@@ -34,7 +34,7 @@ This program is very new and theres a lot to test. Please report issues to the i
 ## Run as docker
 ` docker pull knex666/prpdf`
 
-` docker run -d --name='PRPDF' -p 80:80 -v '/mnt/user/Share':'/Archiv/':'rw' -v '/mnt/user/SCAN':'/source/static/pdf/':'rw' -v '/mnt/user/appdata/prpdf/':'/source/config':'rw' 'knex666/prpdf' python3 /source/prpdf.py`
+` docker run -d --name='PRPDF' -p 80:80 -v '/mnt/user/Share':'/Archiv/':'rw' -v '/mnt/user/SCAN':'/source/static/pdf/':'rw' -v '/mnt/user/appdata/prpdf/':'/source/config':'rw' 'knex666/prpdf' python3 /source/main.py`
 
 * Note 1: remember to setup the network to map the port of your configuration ` -p 80:80` you can choose any port you want see config
 * Note 2: besited a folder structure for documents in a folder you mount to /Archiv/ you can volume mount any directory you want to /Archiv/ to build you own virtual folder structure
@@ -48,7 +48,7 @@ otherwise feel free to edit the sourcecode on vars.py etc.
 
 * ` python3 -m pip install -r requirements.txt`
 * ` sudo apt-get install tesseract-ocr poppler-utils`
-* ` python3 prpdf.py`
+* ` python3 main.py`
 
 ## Run as systemd service on Fedora
 * ` clone to /opt/prpdf (or adapt path below)`
@@ -61,6 +61,19 @@ otherwise feel free to edit the sourcecode on vars.py etc.
 * ` cp prpdf.service /lib/systemd/system `
 * ` systemctl enable --now prpdf`
 
+## Run on TrueNAS Scale via TrueCharts
+1. Create a dataset in your drive pool called prpdf
+2. Add 3 more datasets to the newly created prpdf
+3. Set storage limits and permissions if you wish, enable windows shares to these if you wish
+4. Click the primary prpdf dataset you created in 1 and set the permissions to propagate to child shares
+5. Add the TrueCharts catalog
+6. Enable all the catalog items (Dev/stable/incubator/etc)
+7. Search for prpdf
+8. Click Install
+9. Fill out the settings (Optionally, go back and create permanent)
+10. If the port is not created / open then make sure to create a container port of 30380 to 80 for the web UI
+11. Wait for it to deploy and navigate to https://your-truenas-ip:30380 (or whatever the port is set to in truecharts)
+12. 
 # Configuration
 A default config will be creating within the first start of PR PDF.
 For Docker please mount the config folder to make it persistent.
